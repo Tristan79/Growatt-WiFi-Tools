@@ -1,3 +1,18 @@
+TRiXwooD Domoticz Mod
+
+Combined growatt_server and growatt_data to growatt_domoticz
+
+hard coded host, port and idx of the custom sensors.
+
+Custom sensors used:
+
+usage/temperature/voltage and energy instant/counter
+
+If you do not want to use domoticz but openhab or something else, change the urls in the code to call your favourite domotica software controller!
+
+-----------------------------------------------------------------------------
+
+
 This is a set of tools to play with the Growatt WiFi data collection
 module.
 
