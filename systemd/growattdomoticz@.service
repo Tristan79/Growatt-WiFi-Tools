@@ -1,0 +1,11 @@
+[Unit]
+Description=Growatt Domoticz Server
+
+[Service]
+SyslogIdentifier=groprx
+User=pi
+Group=pi
+WorkingDirectory=/home/pi/Growatt-WiFi-Tools/
+ExecStart=-/usr/bin/perl /home/pi/Growatt-WiFi-Tools/scripts/growatt_server.pl --systemd --datadir=/home/pi/Growatt-WiFi-Tools/data/
+StandardInput=socket
+StandardOutput=syslog
