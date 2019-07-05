@@ -64,7 +64,7 @@ use utf8;
 use strict;
 
 # Package name.
-my $my_package = 'Growatt WiFi Tools';
+my $my_package = 'Growatt Domoticz Server';
 # Program name and version.
 my ($my_name, $my_version) = qw( growatt_server_domoticz 0.01 );
 
@@ -76,16 +76,21 @@ my $domo_port = "7080";
 ### YOU CAN ADD MORE ID HERE, SINCE MY SETUP DO NOT USE ALL VALUES!
 
 my $id_temp = "43";
-my $id_pvv = "44";
-my $id_pvv1 = "46";
+my $id_ppv = "44";
+my $id_ppv1 = "46";
 my $id_pac = "45";
 my $id_pac1 = "47";
 my $id_pbusvolt = "48";
 my $id_total = "50";
 my $id_today = "49";
 my $id_epvtotal = "51";
-my $id_epv1total = "52";
-my $id_epv1today = "53";
+my $id_epv1total = "53";
+my $id_epv1today = "52";
+my $id_iac1 = "55";
+my $id_ipv1 = "56";
+my $id_fac = "54";
+my $id_p1 = "57";
+my $id_status = "91";
 
 
 use Getopt::Long 2.13;
@@ -110,7 +115,7 @@ my $day = 0;			# processing one day's worth of files
 my $test = 0;			# test mode.
 
 # Development options (not shown with -help).
-my $debug = 1;			# debugging (currently default)
+my $debug = 0;			# debugging (currently default)
 my $trace = 0;			# trace (show process)
 
 # Process command line options.
@@ -1020,18 +1025,26 @@ sub print_data {
     
     ### TRiXWooD
     ### YOU CAN ADD MORE VALUES HERE!
+    system 'curl -s "http://' . $domo_ip . ':' . $domo_port . '/json.htm?type=command&param=udevice&idx='. $id_status .'&svalue=' . $a{InvStattxt} . '" &';
     system 'curl -s "http://' . $domo_ip . ':' . $domo_port . '/json.htm?type=command&param=udevice&idx='. $id_temp .'&svalue=' . $a{Tmp} . '" &';
-    system 'curl -s "http://' . $domo_ip . ':' . $domo_port . '/json.htm?type=command&param=udevice&idx='. $id_pvv .'&svalue=' . $a{Ppv} . '" &';
-    system 'curl -s "http://' . $domo_ip . ':' . $domo_port . '/json.htm?type=command&param=udevice&idx='. $id_pvv1 .'&svalue=' . $a{Ppv1} . '" &';
+    system 'curl -s "http://' . $domo_ip . ':' . $domo_port . '/json.htm?type=command&param=udevice&idx='. $id_ppv .'&svalue=' . $a{Ppv} . '" &';
+    system 'curl -s "http://' . $domo_ip . ':' . $domo_port . '/json.htm?type=command&param=udevice&idx='. $id_ppv1 .'&svalue=' . $a{Ppv1} . '" &';
+    system 'curl -s "http://' . $domo_ip . ':' . $domo_port . '/json.htm?type=command&param=udevice&idx='. $id_ipv1 .'&svalue=' . $a{Ipv1} . '" &';
     system 'curl -s "http://' . $domo_ip . ':' . $domo_port . '/json.htm?type=command&param=udevice&idx='. $id_pac .'&svalue=' . $a{Pac} . '" &';
     system 'curl -s "http://' . $domo_ip . ':' . $domo_port . '/json.htm?type=command&param=udevice&idx='. $id_pac1 .'&svalue=' . $a{Pac1} . '" &';
+    system 'curl -s "http://' . $domo_ip . ':' . $domo_port . '/json.htm?type=command&param=udevice&idx='. $id_iac1 .'&svalue=' . $a{Iac1} . '" &';
     system 'curl -s "http://' . $domo_ip . ':' . $domo_port . '/json.htm?type=command&param=udevice&idx='. $id_pbusvolt .'&svalue=' . $a{Pbusvolt} . '" &';
-    system 'curl -s "http://' . $domo_ip . ':' . $domo_port . '/json.htm?type=command&param=udevice&idx='. $id_today .'&svalue=' . $a{E_Today} . ';0" &';
-    system 'curl -s "http://' . $domo_ip . ':' . $domo_port . '/json.htm?type=command&param=udevice&idx='. $id_total .'&svalue=' . $a{E_Total} . ';0" &';
-    system 'curl -s "http://' . $domo_ip . ':' . $domo_port . '/json.htm?type=command&param=udevice&idx='. $id_epvtotal .'&svalue=' . $a{Epvtotal} . ';0" &';
-    system 'curl -s "http://' . $domo_ip . ':' . $domo_port . '/json.htm?type=command&param=udevice&idx='. $id_epv1total .'&svalue=' . $a{Epv1today} . ';0" &';
-    system 'curl -s "http://' . $domo_ip . ':' . $domo_port . '/json.htm?type=command&param=udevice&idx='. $id_epv1today .'&svalue=' . $a{E_Total} . ';0" &';
+    system 'curl -s "http://' . $domo_ip . ':' . $domo_port . '/json.htm?type=command&param=udevice&idx='. $id_today .'&svalue=' . $a{Pac} . ';'  . $a{E_Today}*1000 . '" &';
+    system 'curl -s "http://' . $domo_ip . ':' . $domo_port . '/json.htm?type=command&param=udevice&idx='. $id_total .'&svalue=' . $a{Pac} . ';'  . $a{E_Total}*1000 . '" &';
+    system 'curl -s "http://' . $domo_ip . ':' . $domo_port . '/json.htm?type=command&param=udevice&idx='. $id_epvtotal .'&svalue=' . $a{Ppv1} . ';' . $a{Epvtotal}*1000 . '" &';
     
+    
+    system 'curl -s "http://' . $domo_ip . ':' . $domo_port . '/json.htm?type=command&param=udevice&idx='. $id_epv1total .'&svalue=' . $a{Ppv1} . ';' . $a{Epv1total}*1000 . '" &';
+    system 'curl -s "http://' . $domo_ip . ':' . $domo_port . '/json.htm?type=command&param=udevice&idx='. $id_epv1today .'&svalue=' . $a{Ppv1} . ';' . $a{Epv1today}*1000 . '" &';
+    system 'curl -s "http://' . $domo_ip . ':' . $domo_port . '/json.htm?type=command&param=udevice&idx='. $id_fac .'&svalue=' . $a{Fac} . '" &';
+    system 'curl -s "http://' . $domo_ip . ':' . $domo_port . '/json.htm?type=command&param=udevice&idx='. $id_p1 .'&nvalue=0&svalue=0;0;' . $a{E_Today}*1000 . ';0;0;'.$a{Ppv}.'" &';
+
+    #=pod
     printf( "Growatt Inverter serial   : %-20s",  $a{InverterId} );
     printf( "      Capture sample date : %s\n",   $a{SampleDate} );
     printf( "Growatt Wifi Module serial: %-20s",  $a{DataLoggerId} );
@@ -1093,6 +1106,7 @@ sub print_data {
     printf( "%-11s %8.1f %-10s",   "Nbusvolt",    $a{Nbusvolt},  " V" );
     printf( "%-11s %8.1f %-3s\n",  "E_Rac_total", $a{ERactotal}, "Var" );
     print( "-" x 87, "\n" );
+ #=cut
 
 }
 
