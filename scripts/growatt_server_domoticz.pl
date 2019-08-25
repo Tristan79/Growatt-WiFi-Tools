@@ -91,6 +91,8 @@ my $id_ipv1 = "56";
 my $id_fac = "54";
 my $id_p1 = "57";
 my $id_status = "91";
+my $id_vpv1 = "92";
+my $id_vac1 = "94";
 
 
 use Getopt::Long 2.13;
@@ -1025,6 +1027,10 @@ sub print_data {
     
     ### TRiXWooD
     ### YOU CAN ADD MORE VALUES HERE!
+    
+    system 'curl -s "http://' . $domo_ip . ':' . $domo_port . '/json.htm?type=command&param=udevice&idx='. $id_vac1 .'&svalue=' . $a{Vac1} . '" &';
+    system 'curl -s "http://' . $domo_ip . ':' . $domo_port . '/json.htm?type=command&param=udevice&idx='. $id_vpv1 .'&svalue=' . $a{Vpv1} . '" &';
+
     system 'curl -s "http://' . $domo_ip . ':' . $domo_port . '/json.htm?type=command&param=udevice&idx='. $id_status .'&svalue=' . $a{InvStattxt} . '" &';
     system 'curl -s "http://' . $domo_ip . ':' . $domo_port . '/json.htm?type=command&param=udevice&idx='. $id_temp .'&svalue=' . $a{Tmp} . '" &';
     system 'curl -s "http://' . $domo_ip . ':' . $domo_port . '/json.htm?type=command&param=udevice&idx='. $id_ppv .'&svalue=' . $a{Ppv} . '" &';
