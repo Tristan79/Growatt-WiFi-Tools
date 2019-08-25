@@ -1,4 +1,8 @@
 TRiXwooD Domoticz Mod
+---------------------
+
+ToDo P1 meter and record total today to add it if resetted... since if the inverter stops (cuz sunlight/manual switches off) it reset the count of today
+
 
 Combined growatt_server and growatt_data to growatt_domoticz
 
@@ -109,7 +113,7 @@ call to domoticz:
 
 https://github.com/Tristan79/Growatt-WiFi-Tools/blob/master/scripts/growatt_server_domoticz.pl#L1031
 
-start the stuff...
+now start the stuff...
 
 sudo systemctl enable growatt.socket
 sudo systemctl start growatt.socket
