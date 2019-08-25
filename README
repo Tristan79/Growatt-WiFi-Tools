@@ -10,6 +10,113 @@ usage/temperature/voltage and energy instant/counter
 
 If you do not want to use domoticz but openhab or something else, change the urls in the code to call your favourite domotica software controller!
 
+Run:
+
+git clone https://github.com/Tristan79/Growatt-WiFi-Tools.git
+perl -MCPAN -e 'install Data::Hexify'
+perl -MCPAN -e 'install Text::CSV'
+perl -MCPAN -e 'install IO::Wrap'
+mkdir /home/pi/Growatt-WiFi-Tools/data/
+
+(do not add ----- their seperators in the following)
+
+sudo nano /etc/systemd/system/growatt@.service
+------
+[Unit]
+Description=Growatt Domoticz Server
+
+[Service]
+SyslogIdentifier=growatt
+User=pi
+Group=pi
+WorkingDirectory=/home/pi/Growatt-WiFi-Tools/
+ExecStart=-/usr/bin/perl /home/pi/Growatt-WiFi-Tools/scripts/growatt_server_domoticz.pl --systemd --datadir=/home/pi/Growatt-WiFi-Tools/data/
+StandardInput=socket
+StandardOutput=syslog
+------
+
+sudo nano /etc/systemd/system/growatt.socket
+------
+
+[Unit]
+Description=Growatt Proxy Socket
+
+[Socket]
+ListenStream=5279
+Accept=yes
+
+[Install]
+WantedBy=sockets.target
+
+-----
+
+
+
+
+
+
+Change to your configuration
+
+nano /home/pi/Growatt-WiFi-Tools/scripts/growatt_server_domoticz.pl
+-------
+
+my $domo_ip = "127.0.0.1";
+my $domo_port = "8080";
+
+### YOU CAN ADD MORE ID HERE, SINCE MY SETUP DO NOT USE ALL VALUES!
+
+my $id_temp = "43";
+my $id_ppv = "44";
+my $id_ppv1 = "46";
+my $id_pac = "45";
+my $id_pac1 = "47";
+my $id_pbusvolt = "48";
+my $id_total = "50";
+my $id_today = "49";
+my $id_epvtotal = "51";
+my $id_epv1total = "53";
+my $id_epv1today = "52";
+my $id_iac1 = "55";
+my $id_ipv1 = "56";
+my $id_fac = "54";
+my $id_p1 = "57";
+my $id_status = "91";
+my $id_vpv1 = "92";
+my $id_vac1 = "94";
+
+------
+in domoticz create dummy hardware with the following sensors...
+1 temp sensor, 
+1 custom hz sensor (for fac)
+2 ampere (1 sinus) sensors (for iac1,ipv1)
+3 voltage sensors (for vpv1,vac1 and pbusvolt)
+1 text (for status)
+4 usage sensors (ppv,pac,ppv1,pac1)
+5 energy (total,today,epv Total,Epv1 Total,Epv1 Today)
+1 P1 
+
+if you have more data (epv2 for example) look at
+
+https://github.com/Tristan79/Growatt-WiFi-Tools/blob/master/scripts/growatt_data.pl#L59
+
+you can add them here
+
+ids:
+
+https://github.com/Tristan79/Growatt-WiFi-Tools/blob/master/scripts/growatt_server_domoticz.pl#L78
+
+call to domoticz:
+
+https://github.com/Tristan79/Growatt-WiFi-Tools/blob/master/scripts/growatt_server_domoticz.pl#L1031
+
+start the stuff...
+
+sudo systemctl enable growatt.socket
+sudo systemctl start growatt.socket
+
+
+
+
 -----------------------------------------------------------------------------
 
 
